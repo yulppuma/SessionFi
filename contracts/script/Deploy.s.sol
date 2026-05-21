@@ -2,6 +2,7 @@
 pragma solidity ^0.8.20;
 
 import {Script} from "forge-std/Script.sol";
+import {console} from "forge-std/console.sol";
 import {SessionFiWallet} from "../src/SessionFiWallet.sol";
 import {SessionManager} from "../src/SessionManager.sol";
 

@@ -2,14 +2,14 @@
 pragma solidity ^0.8.20;
 
 import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
-import {ReentrancyGuard} from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 /**
  * @title SessionFiWallet
  * @notice Core smart contract for session-based delegated execution with spending limits
- * @dev Implements scoped authorization for blockchain automation
+ * @dev Implements scoped authorization for blockchain automation with ETH and ERC20 support
  */
 contract SessionFiWallet is Ownable, ReentrancyGuard {
     using ECDSA for bytes32;
@@ -20,7 +20,7 @@ contract SessionFiWallet is Ownable, ReentrancyGuard {
         address sessionKey;         // Delegated executor key
         address allowedTarget;      // Only callable contract address
         bytes4 allowedSelector;     // Only callable function selector
-        address allowedToken;       // Token to track spending
+        address allowedToken;       // Token to track spending (address(0) for ETH)
         uint256 maxAmount;          // Maximum spendable amount
         uint256 spentAmount;        // Amount already spent
         uint256 expiry;             // Session expiration timestamp
@@ -35,7 +35,8 @@ contract SessionFiWallet is Ownable, ReentrancyGuard {
         uint256 sessionId;
         address target;
         bytes4 selector;
-        uint256 amount;
+        address token;              // Token transferred
+        uint256 amount;             // Amount transferred
         uint256 timestamp;
         bool success;
     }
@@ -60,6 +61,7 @@ contract SessionFiWallet is Ownable, ReentrancyGuard {
         address sessionKey,
         address allowedTarget,
         bytes4 allowedSelector,
+        address allowedToken,
         uint256 maxAmount,
         uint256 expiry
     );
@@ -68,6 +70,7 @@ contract SessionFiWallet is Ownable, ReentrancyGuard {
         uint256 indexed sessionId,
         address indexed target,
         bytes4 selector,
+        address token,
         uint256 amount,
         uint256 newSpentAmount
     );
@@ -84,6 +87,14 @@ contract SessionFiWallet is Ownable, ReentrancyGuard {
         bool success,
         string reason
     );
+
+    // ========== Constructor ==========
+
+    /**
+     * @notice Initialize SessionFiWallet with owner set to deployer
+     * @dev Required for OpenZeppelin v5.0+ Ownable
+     */
+    constructor() Ownable(msg.sender) {}
 
     // ========== Modifiers ==========
 
@@ -156,6 +167,7 @@ contract SessionFiWallet is Ownable, ReentrancyGuard {
             sessionKey,
             allowedTarget,
             allowedSelector,
+            allowedToken,
             maxAmount,
             expiry
         );
@@ -165,17 +177,19 @@ contract SessionFiWallet is Ownable, ReentrancyGuard {
 
     /**
      * @notice Execute a delegated transaction within session boundaries
+     * @dev For ETH transfers: pass value as both msg.value and amount parameter
+     *      For ERC20 transfers: pass 0 as msg.value, amount from decoded callData
      * @param sessionId Session ID to execute
      * @param target Target contract address
      * @param data Encoded function call
-     * @param value ETH value to send (0 for token transfers)
+     * @param amount Amount being transferred (ETH in wei or token amount)
      * @return success Whether execution succeeded
      */
     function executeSessionTransaction(
         uint256 sessionId,
         address target,
         bytes calldata data,
-        uint256 value
+        uint256 amount
     ) external payable nonReentrant whenNotPaused sessionExists(sessionId) returns (bool) {
         Session storage session = sessions[sessionId];
 
@@ -192,18 +206,29 @@ contract SessionFiWallet is Ownable, ReentrancyGuard {
         require(selector == session.allowedSelector, "SessionFi: Unapproved function");
 
         // Validate spend limit
-        require(session.spentAmount + value <= session.maxAmount, 
+        require(session.spentAmount + amount <= session.maxAmount, 
                 "SessionFi: Spend limit exceeded");
 
         // Validate nonce
         require(session.nonce < session.maxNonce, "SessionFi: Max transactions exceeded");
 
+        // Handle ETH vs ERC20 transfers
+        uint256 ethValue = 0;
+        if (session.allowedToken == address(0)) {
+            // ETH transfer
+            require(msg.value == amount, "SessionFi: ETH value mismatch");
+            ethValue = amount;
+        } else {
+            // ERC20 transfer - no ETH should be sent
+            require(msg.value == 0, "SessionFi: ERC20 sessions should not send ETH");
+        }
+
         // Update session state
-        session.spentAmount += value;
+        session.spentAmount += amount;
         session.nonce++;
 
         // Execute the transaction
-        (bool success, bytes memory result) = target.call{value: value}(data);
+        (bool success, bytes memory result) = target.call{value: ethValue}(data);
 
         // Record execution
         executionHistory[sessionId].push(
@@ -211,7 +236,8 @@ contract SessionFiWallet is Ownable, ReentrancyGuard {
                 sessionId: sessionId,
                 target: target,
                 selector: selector,
-                amount: value,
+                token: session.allowedToken,
+                amount: amount,
                 timestamp: block.timestamp,
                 success: success
             })
@@ -222,7 +248,7 @@ contract SessionFiWallet is Ownable, ReentrancyGuard {
         if (!success) {
             emit ExecutionAttempted(sessionId, msg.sender, false, "Execution failed");
         } else {
-            emit SessionExecuted(sessionId, target, selector, value, session.spentAmount);
+            emit SessionExecuted(sessionId, target, selector, session.allowedToken, amount, session.spentAmount);
             emit ExecutionAttempted(sessionId, msg.sender, true, "");
         }
 

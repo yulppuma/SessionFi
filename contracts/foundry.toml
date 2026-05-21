@@ -4,20 +4,19 @@ out = "out"
 libs = ["lib"]
 test = "test"
 remappings = [
-    "@openzeppelin/=lib/openzeppelin-contracts/"
+    "@openzeppelin/=lib/openzeppelin-contracts/",
+    "forge-std/=lib/forge-std/src/"
 ]
 
 solc_version = "0.8.20"
-
-[profile.default.optimizer]
-enabled = true
-runs = 200
+optimizer = true
+optimizer_runs = 200
 
 [profile.test]
-optimize = false
+optimizer = false
 
 [profile.production]
-optimize = true
+optimizer = true
 optimizer_runs = 999
 
 [fmt]

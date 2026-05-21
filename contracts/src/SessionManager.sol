@@ -2,7 +2,7 @@
 pragma solidity ^0.8.20;
 
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
-import {ReentrancyGuard} from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 /**
  * @title SessionManager
@@ -77,6 +77,14 @@ contract SessionManager is Ownable, ReentrancyGuard {
     );
 
     event ManagerPaused(bool paused);
+
+    // ========== Constructor ==========
+
+    /**
+     * @notice Initialize SessionManager with owner set to deployer
+     * @dev Required for OpenZeppelin v5.0+ Ownable
+     */
+    constructor() Ownable(msg.sender) {}
 
     // ========== Modifiers ==========
 
