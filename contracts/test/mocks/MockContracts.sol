@@ -22,7 +22,7 @@ contract MockERC20 is ERC20 {
 /**
  * @title MockTarget
  * @notice Mock target contract for delegated calls
- */
+ *
 contract MockTarget {
     event Executed(address indexed caller, uint256 amount, bytes data);
 
@@ -49,6 +49,7 @@ contract MockTarget {
         return true;
     }
 }
+*/
 
 /**
  * @title MockVault

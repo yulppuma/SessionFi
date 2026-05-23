@@ -228,7 +228,7 @@ contract SessionFiWallet is Ownable, ReentrancyGuard {
         session.nonce++;
 
         // Execute the transaction
-        (bool success, bytes memory result) = target.call{value: ethValue}(data);
+        (bool success,) = target.call{value: ethValue}(data);
 
         // Record execution
         executionHistory[sessionId].push(

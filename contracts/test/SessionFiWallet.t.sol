@@ -2,7 +2,7 @@
 pragma solidity ^0.8.20;
 
 import {Test} from "forge-std/Test.sol";
-import {SessionFiWallet} from "../../src/SessionFiWallet.sol";
+import {SessionFiWallet} from "../src/SessionFiWallet.sol";
 import {MockERC20} from "./mocks/MockContracts.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
@@ -484,10 +484,10 @@ contract SessionFiWalletTest is Test {
 
         // Fourth charge would exceed budget (30 + 20 = 50, but 30 + 10 = 40 which is < 50)
         // So we try 25 USDC which would be 30 + 25 = 55 > 50
-        bytes memory paymentData = abi.encodeWithSelector(PROCESS_PAYMENT_SELECTOR, 25e6);
+        bytes memory exceedPaymentData = abi.encodeWithSelector(PROCESS_PAYMENT_SELECTOR, 25e6);
         vm.prank(merchant);
         vm.expectRevert("SessionFi: Spend limit exceeded");
-        sessionFi.executeSessionTransaction(sessionId, address(paymentProcessor), paymentData, 25e6);
+        sessionFi.executeSessionTransaction(sessionId, address(paymentProcessor), exceedPaymentData, 25e6);
     }
 
     // ========== SECURITY TESTS ==========
