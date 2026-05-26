@@ -18,23 +18,23 @@ The goal is not to replace existing wallets like MetaMask or Rainbow, but to act
 
 # Table of Contents
 
-1. Overview
-2. The Problem
-3. Why SessionFi Exists
-4. How SessionFi Works
-5. Real-World Use Cases
-6. Core Features
-7. Architecture
-8. Smart Contract Design
-9. Security Model
-10. Threat Model
-11. Technical Stack
-12. Development Roadmap
-13. Example Flows
-14. Smart Contract Architecture
-15. Frontend Architecture
-16. Future Improvements
-17. Disclaimer
+1. [Overview](#overview)
+2. [The Problem](#the-problem)
+3. [Why SessionFi Exists](#why-sessionfi-exists)
+4. [How SessionFi Works](#how-sessionfi-works)
+5. [Real-World Use Cases](#real-world-use-cases)
+6. [Core Features](#core-features)
+7. [Architecture](#architecture)
+8. [Smart Contract Design](#smart-contract-design)
+9. [Security Model](#security-model)
+10. [Threat Model](#threat-model)
+11. [Technical Stack](#technical-stack)
+12. [Development Roadmap](#development-roadmap)
+13. [Example Flows](#example-flows)
+14. [Smart Contract Architecture](#smart-contract-architecture)
+15. [Frontend Architecture](#frontend-architecture)
+16. [Future Improvements](#future-improvements)
+17. [Disclaimer](#disclaimer)
 
 ---
 
