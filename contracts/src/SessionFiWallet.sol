@@ -135,6 +135,7 @@ contract SessionFiWallet is Ownable, ReentrancyGuard {
         uint256 duration,
         uint256 maxNonce
     ) external whenNotPaused returns (uint256) {
+        //Possible to combine into a modifier to remove excess code
         require(sessionKey != address(0), "SessionFi: Invalid session key");
         require(allowedTarget != address(0), "SessionFi: Invalid target");
         require(maxAmount > 0, "SessionFi: Invalid max amount");
@@ -192,7 +193,7 @@ contract SessionFiWallet is Ownable, ReentrancyGuard {
         uint256 amount
     ) external payable nonReentrant whenNotPaused sessionExists(sessionId) returns (bool) {
         Session storage session = sessions[sessionId];
-
+        //Possible to combine into a modifier to remove excess code
         // Validate session ownership and authorization
         require(msg.sender == session.sessionKey || msg.sender == session.owner, 
                 "SessionFi: Not authorized");
