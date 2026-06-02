@@ -5,13 +5,6 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 5173,
-    strictPort: false,
-    host: true,
-  },
-  build: {
-    target: 'ES2020',
-    outDir: 'dist',
-    sourcemap: false,
-    minify: 'terser',
+    open: true,
   },
 })

@@ -1,49 +1,26 @@
-import React, { useEffect } from 'react';
-import { useAccount } from 'wagmi';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { Link } from 'react-router-dom';
-import '../styles/Header.css';
+import { ConnectButton } from '@rainbow-me/rainbowkit'
+import { Link } from 'react-router-dom'
+import { useAccount } from 'wagmi'
 
-interface HeaderProps {
-  onConnectionChange: (isConnected: boolean) => void;
-}
-
-const Header: React.FC<HeaderProps> = ({ onConnectionChange }) => {
-  const { isConnected, address } = useAccount();
-
-  useEffect(() => {
-    onConnectionChange(isConnected);
-  }, [isConnected, onConnectionChange]);
-
-  const shortAddress = address ? `${address.slice(0, 6)}...${address.slice(-4)}` : '';
+export default function Header() {
+  const { isConnected } = useAccount()
 
   return (
     <header className="header">
       <div className="header-container">
         <Link to="/" className="logo">
-          <span className="logo-icon">🔐</span>
-          <span className="logo-text">SessionFi</span>
+          <h1>SessionFi</h1>
         </Link>
-
-        {isConnected && (
-          <nav className="nav">
-            <Link to="/" className="nav-link">Dashboard</Link>
-            <Link to="/create" className="nav-link">Create Session</Link>
-            <Link to="/settings" className="nav-link">Settings</Link>
-          </nav>
-        )}
-
-        <div className="header-right">
+        <nav className="nav">
           {isConnected && (
-            <div className="connected-info">
-              <span className="address-badge">{shortAddress}</span>
-            </div>
+            <>
+              <Link to="/">Dashboard</Link>
+              <Link to="/create">Create Session</Link>
+            </>
           )}
-          <ConnectButton />
-        </div>
+        </nav>
+        <ConnectButton />
       </div>
     </header>
-  );
-};
-
-export default Header;
+  )
+}
