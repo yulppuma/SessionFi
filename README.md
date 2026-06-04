@@ -143,14 +143,6 @@ Allow an AI agent to:
 * Spend a maximum of 100 USDC
 * Operate for 1 hour
 
-## Gaming Sessions
-
-Allow games to:
-
-* Move in-game assets temporarily
-* Avoid constant wallet confirmations
-* Restrict access to valuable NFTs
-
 ## Subscription Payments
 
 Allow recurring payments:
@@ -463,21 +455,6 @@ If validation passes:
 Otherwise:
 
 * Transaction reverts
-
----
-
-# Example 2 — Gaming Session
-
-## User Starts Game Session
-
-Restrictions:
-
-* Approved game contract
-* Temporary session key
-* Limited item transfers
-* 30-minute expiration
-
-The game can perform gameplay actions without repeated wallet prompts.
 
 ---
 
