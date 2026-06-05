@@ -53,6 +53,6 @@ export const SESSION_FI_ABI = [
 ]
 
 export const CONTRACTS = {
-  sessionFi: process.env.VITE_SESSION_FI_CONTRACT || '',
-  sessionManager: process.env.VITE_SESSION_MANAGER_CONTRACT || '',
+  sessionFi: import.meta.env.VITE_SESSION_FI_CONTRACT || '',
+  sessionManager: import.meta.env.VITE_SESSION_MANAGER_CONTRACT || '',
 }
