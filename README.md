@@ -47,6 +47,7 @@ Modern Web3 applications increasingly rely on:
 
 * AI agents
 * Trading bots
+  ** Note: Everything below AI agents and trading bots, will be subject to change in scope of SessionFi 1.0
 * Automated execution
 * Embedded wallets
 * Smart EOAs
