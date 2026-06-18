@@ -14,6 +14,10 @@ Instead of giving applications, bots, or agents unrestricted wallet access, Sess
 
 The goal is not to replace existing wallets like MetaMask or Rainbow, but to act as a secure execution layer between a user's wallet and third-party automated systems.
 
+PHASE 1 (v1): Create AI Trading Agents to interact with, via SessionFi.
+PHASE 2 (v2?):Adjust existing AI Trading Agents to interact with other smart contracts via SessionFi.
+PHASE 3: Add Smart EOAs, subscription-based payments, other 'sessions' 
+
 SessionFIWallet Smart Contract Address: 0x4417D1E6cdE387a391a5aC73f9A13e06076b4984
 SessionManager Smart Contract Address: 0xe47B64746A7B1D3f430aB5b95Fbbbd051c83FBF3
 
